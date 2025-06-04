@@ -5,6 +5,9 @@ class Paciente:
         self.__dni = dni
         self.__fecha_de_nacimiento = fecha_de_nacimiento  
 
+    def obtener_nombre(self) -> str:
+        return self.__nombre
+
     def obtener_dni(self) -> str:
         return self.__dni
     

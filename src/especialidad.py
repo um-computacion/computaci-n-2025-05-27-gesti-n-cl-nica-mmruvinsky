@@ -3,7 +3,7 @@ class Especialidad:
     
     def __init__(self, tipo: str, dias: list[str]):
         self.__tipo = tipo
-        self.__dias = self.__dias = [d.lower() for d in dias]
+        self.__dias = [d.lower() for d in dias]
 
     def verificar_dia(self, dia: str) -> bool:
         dia = dia.lower()
