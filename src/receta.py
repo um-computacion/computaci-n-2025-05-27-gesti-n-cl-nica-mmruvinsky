@@ -1,7 +1,7 @@
 from paciente import Paciente
 from medico import Medico
 from excepciones import RecetaInvalidaException
-import datetime
+from datetime import datetime
 
 class Receta:
     def __init__(self, paciente: Paciente, medico: Medico, medicamentos: list[str]):

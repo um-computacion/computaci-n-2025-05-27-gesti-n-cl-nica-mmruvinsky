@@ -14,42 +14,51 @@ class Clinica:
 
 # AGREGAR
 
-
     def agregar_medico(self, medico: Medico) -> None:
-        if medico.matricula in self.medicos:
-            print(f"El médico con matrícula {medico.matricula} ya está registrado.")
+        if medico.obtener_matricula() in self.__medicos:
+            print(f"El médico con matrícula {medico.obtener_matricula()} ya está registrado.")
         else:
-            self.medicos[medico.matricula] = medico
-            print(f"Médico {medico.nombre} agregado correctamente.")
+            self.__medicos[medico.obtener_matricula()] = medico
+            print(f"Médico {medico.obtener_nombre()} agregado correctamente.")
+
 
     def agregar_paciente(self, paciente: Paciente) -> None:
-        if paciente.dni in self.pacientes:
-            print(f"El paciente con DNI {paciente.dni} ya está registrado.")
+        if paciente.obtener_dni() in self.__pacientes:
+            print(f"El paciente con DNI {paciente.obtener_dni()} ya está registrado.")
         else:
-            self.pacientes[paciente.dni] = paciente
-            print(f"Paciente {paciente.nombre} agregado correctamente.")
+            self.__pacientes[paciente.obtener_dni()] = paciente
+            print(f"Paciente {paciente.obtener_nombre()} agregado correctamente.")
+
 
 
 # AGENDAR TURNO
 
     def agendar_turno(self, turno: Turno) -> None:
-        if turno.dni_paciente not in self.pacientes:
-            print(f"No se puede agendar turno. Paciente con DNI {turno.dni_paciente} no registrado.")
+
+        paciente = turno.obtener_paciente()
+        medico = turno.obtener_medico()
+        
+        dni_paciente = paciente.obtener_dni()
+        matricula_medico = medico.obtener_matricula()
+        
+        # VERIFICAR SI EL PACIENTE ESTÁ REGISTRADO EN LA CLINICA
+        if dni_paciente not in self.__pacientes:
+            print(f"No se puede agendar turno. Paciente con DNI {dni_paciente} no registrado.")
             return
-        if turno.matricula_medico not in self.medicos:
-            print(f"No se puede agendar turno. Médico con matrícula {turno.matricula} no registrado.")
+            
+        # VERIFICAR SI EL MEDICO ESTA REGISTRADO EN LA CLINICA
+        if matricula_medico not in self.__medicos:
+            print(f"No se puede agendar turno. Médico con matrícula {matricula_medico} no registrado.")
             return
 
-        self.turnos.append(turno)
-        print(f"Turno agendado correctamente para el paciente {turno.dni_paciente} con el médico {turno.matricula_medico}.")
+        self.__turnos.append(turno)
+        print(f"Turno agendado correctamente para el paciente {paciente.obtener_nombre()} con el médico {medico.obtener_nombre()}.")
 
 
 # OBTENER
 
-    def obtener_medicos(self) -> list[Medico]:
-        for medico in self.medicos.values():
-            print(f"{medico.nombre} | Matrícula: {medico.matricula} | Especialidad: {medico.especialidad}")
-
-    def obtener_pacientes(self) -> list[Paciente]:
-        for paciente in self.pacientes.values():
-            print(f"{paciente.nombre} | DNI: {paciente.dni} | Edad: {paciente.edad}")
+    def obtener_medicos_dict(self) -> dict[str, Medico]:
+        return self.__medicos
+    
+    def obtener_pacientes_dict(self) -> dict[str, Paciente]:
+        return self.__pacientes

@@ -13,6 +13,9 @@ class Turno:
 
     def obtener_medico(self) -> Medico:
         return self.__medico
+    
+    def obtener_paciente(self) -> Paciente:
+        return self.__paciente
 
     def obtener_fecha_hora(self) -> datetime:
         return self.__fecha_hora

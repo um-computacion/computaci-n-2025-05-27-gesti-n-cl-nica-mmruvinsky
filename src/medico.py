@@ -11,6 +11,12 @@ class Medico:
     def obtener_matricula(self) -> str:
         return self.__matricula
     
+    def obtener_nombre(self) -> str:
+        return self.__nombre
+    
+    def obtener_especialidades(self) -> list[Especialidad]:
+        return self.__especialidades.copy()
+    
     def agregar_especialidad(self, especialidad: Especialidad) -> None:
         if especialidad not in self.__especialidades:
             self.__especialidades.append(especialidad)
@@ -23,4 +29,4 @@ class Medico:
         
 
     def __str__(self) -> str:
-        return f"Medico: {self.nombre}, Matricula: {self.matricula}, Especialidades: {self.especialidad}"
+        return f"Medico: {self.__nombre}, Matricula: {self.__matricula}, Especialidades: {self.__especialidades}"
