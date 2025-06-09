@@ -3,6 +3,7 @@ from paciente import Paciente
 from medico import Medico
 from turno import Turno
 from historia_clinica import HistoriaClinica
+from datetime import datetime
 
 class Clinica:
     def __init__(self, medicos: dict[str, Medico], pacientes: dict[str, Paciente], turnos: list[Turno], historias_clinicas: dict[str, HistoriaClinica]) -> None:
@@ -62,3 +63,36 @@ class Clinica:
     
     def obtener_pacientes_dict(self) -> dict[str, Paciente]:
         return self.__pacientes
+    
+    def obtener_medico_por_matricula(self, matricula: str) -> Medico | None:
+        return self.__medicos.get(matricula)
+    
+    def obtener_historia_clinica_por_DNI(self, dni: str) -> HistoriaClinica | None: 
+        return self.__historias_clinicas.get(dni) 
+     
+    def obtener_turnos(self, turnos: list[Turno]):
+        return self.__turnos
+    
+# VALIDACIONES
+
+    def validar_existencia_paciente(self, dni: str) -> bool:
+        if dni in self.__pacientes:
+            return True
+        else:
+            return False
+        
+    def validar_existencia_medico(self, matricula: str) -> bool:
+        if matricula in self.__medicos:
+            return True
+        else:
+            return False
+        
+    def validar_turno_duplicado(self, matricula: str, fecha_hora: datetime) -> bool:
+        for turno in self.__turnos:
+            if (turno.obtener_medico().obtener_matricula() == matricula and 
+                turno.obtener_fecha_hora() == fecha_hora):
+                return True     
+        return False 
+    
+    
+
