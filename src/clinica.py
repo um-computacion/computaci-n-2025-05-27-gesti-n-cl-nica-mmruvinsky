@@ -4,6 +4,7 @@ from medico import Medico
 from turno import Turno
 from historia_clinica import HistoriaClinica
 from datetime import datetime
+from receta import Receta
 
 class Clinica:
     def __init__(self, medicos: dict[str, Medico], pacientes: dict[str, Paciente], turnos: list[Turno], historias_clinicas: dict[str, HistoriaClinica]) -> None:
@@ -31,31 +32,96 @@ class Clinica:
             print(f"Paciente {paciente.obtener_nombre()} agregado correctamente.")
 
 
-
 # AGENDAR TURNO
 
-    def agendar_turno(self, turno: Turno) -> None:
-
-        paciente = turno.obtener_paciente()
-        medico = turno.obtener_medico()
-        
-        dni_paciente = paciente.obtener_dni()
-        matricula_medico = medico.obtener_matricula()
-        
+    def agendar_turno(self, dni: str, matricula: str, especialidad: str, fecha_hora: datetime):
+    
         # VERIFICAR SI EL PACIENTE ESTÁ REGISTRADO EN LA CLINICA
-        if dni_paciente not in self.__pacientes:
-            print(f"No se puede agendar turno. Paciente con DNI {dni_paciente} no registrado.")
-            return
+        if not self.validar_existencia_paciente(dni):
+            print(f"Paciente con DNI: {dni} no está registrado en la clínica")
+            return False
             
         # VERIFICAR SI EL MEDICO ESTA REGISTRADO EN LA CLINICA
-        if matricula_medico not in self.__medicos:
-            print(f"No se puede agendar turno. Médico con matrícula {matricula_medico} no registrado.")
-            return
+        if not self.validar_existencia_medico(matricula):
+            print(f"Médico con matrícula: {matricula} no está registrado en la clínica")
+            return False
+        
+        # OBTENER LOS OBJETOS
+        paciente = self.obtener_paciente_por_dni(dni) 
+        medico = self.obtener_medico_por_matricula(matricula)
+        
+        # VALIDAR ESPECIALIDAD
+        tiene_especialidad = False
+        for esp in medico.obtener_especialidades():
+            if esp.obtener_especialidad() == especialidad:
+                tiene_especialidad = True
+                break
 
+        if not tiene_especialidad:
+            print(f"El médico no atiende la especialidad {especialidad}")
+            return False
+        
+        #VALIDAR SI EL MEDICO ATIENDE ESA ESPECIALIDAD ESE DIA
+        dia_semana = fecha_hora.strftime('%A').lower()
+        especialidad_para_dia = medico.obtener_especialidad_para_dia(dia_semana)
+
+        if especialidad_para_dia != especialidad:
+            print(f"El médico no atiende {especialidad} los {dia_semana}")
+            return False
+        
+        # VALIDAR TURNO DUPLICADO
+        if self.validar_turno_duplicado(matricula, fecha_hora):
+            print(f"Ya existe un turno para ese médico en esa fecha y hora")
+            return False
+        
+        # CREAR EL TURNO (después de todas las validaciones)
+        turno = Turno(paciente, medico, fecha_hora, especialidad)
+        
+        # AGREGAR EL TURNO
         self.__turnos.append(turno)
         print(f"Turno agendado correctamente para el paciente {paciente.obtener_nombre()} con el médico {medico.obtener_nombre()}.")
+        
+        historia = self.obtener_historia_clinica_por_DNI(dni)
+        if historia:
+            historia.agregar_turno(turno)
+        print(f"Turno agregado a la historia clínica del paciente con dni:{dni}")
 
+        return True
+    
+# EMITIR RECETA
 
+    def emitir_receta(self, dni: str, matricula: str, medicamentos: list[str]) -> str:
+        
+        # VALIDACIONES BÁSICAS
+        if not self.validar_existencia_paciente(dni):
+            return f"Error: Paciente con DNI {dni} no está registrado en la clínica"
+            
+        if not self.validar_existencia_medico(matricula):
+            return f"Error: Médico con matrícula {matricula} no está registrado en la clínica"
+        
+        if not medicamentos:
+            return "Error: La receta debe contener al menos un medicamento"
+        
+        # OBTENER OBJETOS
+        paciente = self.obtener_paciente_por_dni(dni)
+        medico = self.obtener_medico_por_matricula(matricula)
+        
+        # CREAR LA RECETA
+   
+        receta = Receta(paciente, medico, medicamentos)
+            
+        # AGREGAR A LA HISTORIA CLÍNICA
+        historia = self.obtener_historia_clinica_por_DNI(dni)
+        if historia:
+                historia.agregar_receta(receta)
+        else:
+                # Crear historia clínica si no existe
+                nueva_historia = HistoriaClinica(paciente)
+                nueva_historia.agregar_receta(receta)
+                self.__historias_clinicas[dni] = nueva_historia
+            
+        return f"Receta emitida correctamente para {paciente.obtener_nombre()}"
+            
 # OBTENER
 
     def obtener_medicos_dict(self) -> dict[str, Medico]:
@@ -67,13 +133,22 @@ class Clinica:
     def obtener_medico_por_matricula(self, matricula: str) -> Medico | None:
         return self.__medicos.get(matricula)
     
+    def obtener_paciente_por_dni(self, dni: str) -> Paciente | None:
+        return self.__pacientes.get(dni)
+    
     def obtener_historia_clinica_por_DNI(self, dni: str) -> HistoriaClinica | None: 
         return self.__historias_clinicas.get(dni) 
-     
-    def obtener_turnos(self, turnos: list[Turno]):
-        return self.__turnos
+
+    def obtener_turnos(self) -> list[Turno]:  
+        return self.__turnos.copy()  
     
-# VALIDACIONES
+    def obtener_pacientes(self) -> list[Paciente]:
+        return list(self.__pacientes.values())
+
+    def obtener_medicos(self) -> list[Medico]:
+        return list(self.__medicos.values())
+        
+# VALIDAR
 
     def validar_existencia_paciente(self, dni: str) -> bool:
         if dni in self.__pacientes:
@@ -93,6 +168,10 @@ class Clinica:
                 turno.obtener_fecha_hora() == fecha_hora):
                 return True     
         return False 
+    
+    def obtener_dia_semana_en_espanol(self, fecha_hora: datetime) -> str:
+        dias = ['lunes', 'martes', 'miércoles', 'jueves', 'viernes', 'sábado', 'domingo']
+        return dias[fecha_hora.weekday()]
     
     
 
