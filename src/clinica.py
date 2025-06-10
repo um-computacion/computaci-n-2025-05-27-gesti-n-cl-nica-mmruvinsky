@@ -148,6 +148,9 @@ class Clinica:
     def obtener_medicos(self) -> list[Medico]:
         return list(self.__medicos.values())
         
+    def obtener_especialidad_disponible(self, medico: Medico, dia_semana: str) -> str | None:
+        return medico.obtener_especialidad_para_dia(dia_semana)
+    
 # VALIDAR
 
     def validar_existencia_paciente(self, dni: str) -> bool:
