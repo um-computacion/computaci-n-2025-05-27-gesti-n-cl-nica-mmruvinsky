@@ -17,3 +17,19 @@ class DNIInvalidoException(PacienteInvalidoException):
 class MatriculaInvalidaException(MedicoInvalidoException):
     """Excepción específica para matrícula inválida"""
     pass
+
+class PacienteNoEncontradoException(PacienteInvalidoException):
+    """Excepción para paciente no encontrado"""
+    pass
+
+class MedicoNoDisponibleException(MedicoInvalidoException):
+    """Excepción para medico no encontrado"""
+    pass
+
+class TurnoOcupadoException(ClinicaException):
+    """Expepción turno ocupado"""
+    pass
+
+class RecetaInvalidaException(ClinicaException):
+    """Excepción receta inválida"""
+    pass
