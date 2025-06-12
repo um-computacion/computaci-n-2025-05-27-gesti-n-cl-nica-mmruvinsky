@@ -5,6 +5,19 @@ from turno import Turno
 from historia_clinica import HistoriaClinica
 from datetime import datetime
 from receta import Receta
+from excepciones import (
+    ClinicaException,
+    PacienteInvalidoException,
+    MedicoInvalidoException,
+    DNIInvalidoException,
+    MatriculaInvalidaException,
+    PacienteNoEncontradoException,
+    MedicoNoDisponibleException,
+    MedicoNoEncontradoException,
+    HistoriaClinicaNoEncontradaException,
+    TurnoOcupadoException,
+    RecetaInvalidaException
+)
 
 class Clinica:
     def __init__(self, medicos: dict[str, Medico], pacientes: dict[str, Paciente], turnos: list[Turno], historias_clinicas: dict[str, HistoriaClinica]) -> None:
@@ -71,7 +84,7 @@ class Clinica:
         
         # VALIDAR TURNO DUPLICADO
         if self.validar_turno_duplicado(matricula, fecha_hora):
-            print(f"Ya existe un turno para ese médico en esa fecha y hora")
+            raise TurnoOcupadoException(f"Ya existe un turno para ese médico en esa fecha y hora")
             return False
         
         # CREAR EL TURNO (después de todas las validaciones)
@@ -94,13 +107,13 @@ class Clinica:
         
         # VALIDACIONES BÁSICAS
         if not self.validar_existencia_paciente(dni):
-            return f"Error: Paciente con DNI {dni} no está registrado en la clínica"
+            raise RecetaInvalidaException(f"Error: Paciente con DNI {dni} no está registrado en la clínica")
             
         if not self.validar_existencia_medico(matricula):
-            return f"Error: Médico con matrícula {matricula} no está registrado en la clínica"
+            raise RecetaInvalidaException(f"Error: Médico con matrícula {matricula} no está registrado en la clínica")
         
         if not medicamentos:
-            return "Error: La receta debe contener al menos un medicamento"
+            raise RecetaInvalidaException("Error: La receta debe contener al menos un medicamento")
         
         # OBTENER OBJETOS
         paciente = self.obtener_paciente_por_dni(dni)
@@ -131,13 +144,22 @@ class Clinica:
         return self.__pacientes
     
     def obtener_medico_por_matricula(self, matricula: str) -> Medico | None:
-        return self.__medicos.get(matricula)
+        medico = self.__medicos.get(matricula)
+        if medico is None:
+            raise MedicoNoEncontradoException(f"Médico con matrícula {matricula} no encontrado")
+        return medico
     
     def obtener_paciente_por_dni(self, dni: str) -> Paciente | None:
-        return self.__pacientes.get(dni)
+        paciente = self.__pacientes.get(dni)
+        if paciente is None:
+            raise PacienteNoEncontradoException(f"Paciente con DNI: {dni} no encontrado")
+        return paciente
     
     def obtener_historia_clinica_por_DNI(self, dni: str) -> HistoriaClinica | None: 
-        return self.__historias_clinicas.get(dni) 
+        hc = self.__historias_clinicas.get(dni) 
+        if hc is None:
+            raise HistoriaClinicaNoEncontradaException(f"Historia clinica relacionada con el DNI: {dni} no encontrada")
+        return HistoriaClinica
 
     def obtener_turnos(self) -> list[Turno]:  
         return self.__turnos.copy()  
@@ -175,6 +197,8 @@ class Clinica:
     def obtener_dia_semana_en_espanol(self, fecha_hora: datetime) -> str:
         dias = ['lunes', 'martes', 'miércoles', 'jueves', 'viernes', 'sábado', 'domingo']
         return dias[fecha_hora.weekday()]
+    
+    
     
     
 
