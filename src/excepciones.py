@@ -22,8 +22,16 @@ class PacienteNoEncontradoException(PacienteInvalidoException):
     """Excepción para paciente no encontrado"""
     pass
 
+class MedicoNoEncontradoException(MedicoInvalidoException):
+     """Excepción para medico no encontrado"""
+     pass
+
+class HistoriaClinicaNoEncontradaException(ClinicaException):
+    """Excepción para historia clinica no encontrada"""
+    pass
+
 class MedicoNoDisponibleException(MedicoInvalidoException):
-    """Excepción para medico no encontrado"""
+    """Excepción para medico no disponible"""
     pass
 
 class TurnoOcupadoException(ClinicaException):
