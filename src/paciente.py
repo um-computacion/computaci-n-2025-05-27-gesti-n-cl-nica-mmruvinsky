@@ -1,15 +1,23 @@
 import re
-from excepciones import DNIInvalidoException
-
+from excepciones import ( DNIInvalidoException, PacienteInvalidoException ) 
 
 class Paciente:
 
     def __init__(self, nombre: str, dni: str, fecha_de_nacimiento: str):
         self.__nombre = nombre
-        self.__dni = dni
+        self.__dni = self._validar_dni(dni)
         self.__fecha_de_nacimiento = fecha_de_nacimiento  
 
-# VALIDAR DNI
+# VALIDACIONES
+
+    def _validar_nombre(self, nombre: str) -> str:
+        if not nombre:
+            raise PacienteInvalidoException("El nombre del paciente no puede estar vacío")
+        
+        nombre_limpio = nombre.strip()
+        
+        if not nombre_limpio:
+            raise PacienteInvalidoException("El nombre del paciente no puede estar vacío")
 
     def _validar_dni(self, dni: str) -> str:
  

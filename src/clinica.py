@@ -1,11 +1,11 @@
 from typing import List, Dict
-from paciente import Paciente
-from medico import Medico
-from turno import Turno
-from historia_clinica import HistoriaClinica
+from src.paciente import Paciente
+from src.medico import Medico
+from src.turno import Turno
+from src.historia_clinica import HistoriaClinica
 from datetime import datetime
-from receta import Receta
-from excepciones import (
+from src.receta import Receta
+from src.excepciones import (
     ClinicaException,
     PacienteInvalidoException,
     MedicoInvalidoException,
@@ -75,7 +75,7 @@ class Clinica:
             return False
         
         #VALIDAR SI EL MEDICO ATIENDE ESA ESPECIALIDAD ESE DIA
-        dia_semana = fecha_hora.strftime('%A').lower()
+        dia_semana = self.obtener_dia_semana_en_espanol(fecha_hora)
         especialidad_para_dia = medico.obtener_especialidad_para_dia(dia_semana)
 
         if especialidad_para_dia != especialidad:
@@ -158,8 +158,8 @@ class Clinica:
     def obtener_historia_clinica_por_DNI(self, dni: str) -> HistoriaClinica | None: 
         hc = self.__historias_clinicas.get(dni) 
         if hc is None:
-            raise HistoriaClinicaNoEncontradaException(f"Historia clinica relacionada con el DNI: {dni} no encontrada")
-        return HistoriaClinica
+            return None 
+        return hc
 
     def obtener_turnos(self) -> list[Turno]:  
         return self.__turnos.copy()  
