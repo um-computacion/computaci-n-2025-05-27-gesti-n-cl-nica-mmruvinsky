@@ -1,6 +1,6 @@
-from especialidad import Especialidad
+from src.especialidad import Especialidad
 import re
-from excepciones import (
+from src.excepciones import (
     MedicoInvalidoException,
     MatriculaInvalidaException
 )
@@ -9,7 +9,7 @@ class Medico:
     
     def __init__(self, nombre: str, matricula: str, especialidades: list[Especialidad]):
         self.__nombre = nombre
-        self.__matricula = matricula
+        self.__matricula = self._validar_matricula(matricula)
         self.__especialidades = especialidades.copy()
 
 # GETTERS

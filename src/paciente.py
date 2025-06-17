@@ -4,7 +4,7 @@ from excepciones import ( DNIInvalidoException, PacienteInvalidoException )
 class Paciente:
 
     def __init__(self, nombre: str, dni: str, fecha_de_nacimiento: str):
-        self.__nombre = nombre
+        self.__nombre = self._validar_nombre(nombre)  
         self.__dni = self._validar_dni(dni)
         self.__fecha_de_nacimiento = fecha_de_nacimiento  
 
@@ -18,6 +18,8 @@ class Paciente:
         
         if not nombre_limpio:
             raise PacienteInvalidoException("El nombre del paciente no puede estar vacío")
+        
+        return nombre_limpio  
 
     def _validar_dni(self, dni: str) -> str:
  
@@ -42,5 +44,3 @@ class Paciente:
     
     def __str__(self) -> str:
         return f"Paciente: {self.__nombre}, DNI: {self.__dni}, Fecha de nacimiento: {self.__fecha_de_nacimiento}"
-
-    

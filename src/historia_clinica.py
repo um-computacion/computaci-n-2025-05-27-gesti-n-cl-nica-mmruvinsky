@@ -1,6 +1,6 @@
-from turno import Turno
-from paciente import Paciente
-from receta import Receta
+from src.turno import Turno
+from src.paciente import Paciente
+from src.receta import Receta
 
 class HistoriaClinica:
 
