@@ -1,19 +1,24 @@
-#!/usr/bin/env python3
-# -*- coding: utf-8 -*-
-
-"""
-CLI - Interfaz de Línea de Comandos para Sistema de Gestión de Clínica
-====================================================================
-"""
-
 import os
+import sys
 from datetime import datetime
-from src.clinica import Clinica
-from src.paciente import Paciente
-from src.medico import Medico
-from src.especialidad import Especialidad
-from src.excepciones import *
 
+sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+
+try:
+    from src.clinica import Clinica
+    from src.paciente import Paciente
+    from src.medico import Medico
+    from src.especialidad import Especialidad
+    from src.excepciones import *
+except ImportError:
+    print("❌ Error: No se pueden importar los módulos necesarios")
+    print("Asegúrate de que la estructura de directorios sea correcta:")
+    print("- src/clinica.py")
+    print("- src/paciente.py")
+    print("- src/medico.py")
+    print("- src/especialidad.py")
+    print("- src/excepciones.py")
+    sys.exit(1)
 
 class CLI:
     """Interfaz de consola para el sistema de gestión de clínica."""
@@ -84,7 +89,7 @@ class CLI:
         print("-" * 20)
         
         try:
-            nombre = input("Nombre: ").strip()
+            nombre = input("Nombre y apellido: ").strip()
             dni = input("DNI: ").strip()
             fecha_nac = input("Fecha nacimiento (DD/MM/YYYY): ").strip()
             
@@ -378,5 +383,9 @@ class CLI:
 
 
 if __name__ == "__main__":
-    clinica = Clinica({}, {}, [], {})
-    cli = CLI(clinica)
+    try:
+        clinica = Clinica({}, {}, [], {})
+        cli = CLI(clinica)
+        cli.ejecutar()
+    except Exception as e:
+        print(f"❌ Error al inicializar: {e}")

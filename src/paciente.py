@@ -1,5 +1,5 @@
 import re
-from excepciones import ( DNIInvalidoException, PacienteInvalidoException ) 
+from src.excepciones import ( DNIInvalidoException, PacienteInvalidoException ) 
 
 class Paciente:
 
