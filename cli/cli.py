@@ -373,7 +373,10 @@ class CLI:
                 print(f"❌ Error inesperado: {e}")
                 self.pausar()
 
+    def pausar(self):
+        input("\nPresiona Enter para continuar...")
+
 
 if __name__ == "__main__":
-    cli = CLI()
-    cli.ejecutar()
+    clinica = Clinica({}, {}, [], {})
+    cli = CLI(clinica)
