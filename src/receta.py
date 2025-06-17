@@ -1,6 +1,6 @@
-from paciente import Paciente
-from medico import Medico
-from excepciones import RecetaInvalidaException
+from src.paciente import Paciente
+from src.medico import Medico
+from src.excepciones import RecetaInvalidaException
 from datetime import datetime
 
 class Receta:

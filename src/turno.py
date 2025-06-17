@@ -1,7 +1,7 @@
 import datetime
-from medico import Medico
-from paciente import Paciente
-from especialidad import Especialidad
+from src.medico import Medico
+from src.paciente import Paciente
+from src.especialidad import Especialidad
 
 class Turno:
 
