@@ -1,4 +1,5 @@
 [![Review Assignment Due Date](https://classroom.github.com/assets/deadline-readme-button-22041afd0340ce965d47ae6ef1cefeee28c7c493a6346c4f15d667ab976d596c.svg)](https://classroom.github.com/a/y_fEcNZn)
+
 # 🏥 Sistema de Gestión para una Clínica
 
 ## 👤 Información del Alumno
@@ -7,6 +8,27 @@
 - **Nombre y Apellido**: [Miguel Jose Martín]
 - **Ciclo Lectivo**: 2025
 - **Carrera**: [Ingienería informática]
+
+## 🚀 Cómo ejecutar el sistema
+
+-Ejecuciòn CLI:
+
+  python3 cli/cli.py
+
+-Requisitos:
+
+  Python 3.10 o superior
+
+  No requiere librerías externas adicionales
+
+-Ejecutar tests:
+
+  python3 -m unittest discover
+
+-Coverage: 
+
+  python3 -m coverage run -m unittest discover
+  python3 -m coverage report -m
 
 ## ⏰ Información Importante sobre la Entrega
 
